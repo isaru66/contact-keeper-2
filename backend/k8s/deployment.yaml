@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-keeper-be
+spec:
+  selector:
+    matchLabels:
+      app: contact-keeper-be
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: contact-keeper-be
+        tier: backend
+    spec:
+      containers:
+        - name: contact-keeper-be
+          image: "isaru66acr.azurecr.io/contact-keeper-be:latest"
+          imagePullPolicy: "IfNotPresent"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contact-keeper-be
+spec:
+  selector:
+    app: contact-keeper-be
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000

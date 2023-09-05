@@ -1,0 +1,1 @@
+docker run -d --rm --name contact-keeper-fe --env PORT=8090 --env BACKEND_URL=localhost:5003 -p 8090:8090 contact-keeper-fe:latest

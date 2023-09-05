@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-keeper-fe
+spec:
+  selector:
+    matchLabels:
+      app: contact-keeper-fe
+      tier: frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: contact-keeper-fe
+        tier: frontend
+    spec:
+      containers:
+        - name: contact-keeper-fe
+          image: "{{ .Values.image.repository }}/contact-keeper-be:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: "IfNotPresent"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  nginx.conf: |
+    upstream api {
+      server backend:5000;
+    }
+    server {
+      listen 80;
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+      }
+      location /api {
+          proxy_pass http://backend;
+      }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contact-keeper-fe-service
+spec:
+  selector:
+    app: contact-keeper-fe
+  ports:
+    - protocol: TCP
+      port: 7777
+      targetPort: 80
+  type: LoadBalancer

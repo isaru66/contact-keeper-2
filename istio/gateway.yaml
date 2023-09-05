@@ -1,0 +1,46 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: contact-keeper-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: contact-keeper-vs
+  namespace: default
+spec:
+  gateways:
+  - contact-keeper-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        prefix: /contact-keeper/be/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: contact-keeper-be
+        port:
+          number: 5000
+  - match:
+    - uri:
+        prefix: /contact-keeper/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: contact-keeper-fe
+        port:
+          number: 8091

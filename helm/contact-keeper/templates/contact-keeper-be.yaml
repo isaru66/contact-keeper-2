@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-keeper-be
+spec:
+  selector:
+    matchLabels:
+      app: contact-keeper-be
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: contact-keeper-be
+        tier: backend
+    spec:
+      containers:
+        - name: contact-keeper-be
+          image: "{{ .Values.image.repository }}/contact-keeper-be:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: "IfNotPresent"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: contact-keeper-be
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000

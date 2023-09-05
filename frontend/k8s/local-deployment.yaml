@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contact-keeper-fe
+spec:
+  selector:
+    matchLabels:
+      app: contact-keeper-fe
+      tier: frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: contact-keeper-fe
+        tier: frontend
+        version: v1
+    spec:
+      containers: 
+      - name: contact-keeper-fe
+        image: "contact-keeper-fe:latest"
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 8091
+        env:
+          - name: PORT
+            value: "8091"
+          - name: BACKEND_URL
+            value: "test"
+        volumeMounts:
+        - name: contact-keeper-fe-config
+          mountPath: "/workspace/config.json"
+          subPath: "config.json"
+          readOnly: true
+      volumes:
+      - name: contact-keeper-fe-config
+        configMap:
+          name: contact-keeper-fe-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: contact-keeper-fe-config
+data:
+  config.json: |
+    {
+      "INJECT": "k8s",
+      "BACKENDURL": "http://localhost/contact-keeper/be/"
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: contact-keeper-fe
+  labels:
+    app: contact-keeper
+    service: contact-keeper
+spec:
+  selector:
+    app: contact-keeper-fe
+  ports:
+    - protocol: TCP
+      port: 8091
+      targetPort: 8091

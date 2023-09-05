@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: contact-keeper-fe
+spec:
+  host: contact-keeper-fe
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: istioSession
+          path: /
+          ttl: 0s
+

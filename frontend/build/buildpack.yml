@@ -1,0 +1,5 @@
+staticfile:
+  nginx:
+    root: /
+    pushstate: true
+    force_https: false
