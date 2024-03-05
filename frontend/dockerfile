@@ -11,6 +11,8 @@ RUN npm run build
 # 2nd Stage
 FROM nginx:1.25-alpine
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html/contact-keeper/
+RUN chown -R nginx:nginx /usr/share/nginx/html/contact-keeper/
+RUN chmod 755 /usr/share/nginx/html/contact-keeper/
 # reverse proxy config
 COPY ./nginx/default.conf /etc/nginx/templates/default.conf.template
 WORKDIR /usr/share/nginx/html

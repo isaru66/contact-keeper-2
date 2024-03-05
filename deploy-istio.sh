@@ -32,7 +32,7 @@ if [[ "$BUILD" =~ ^([yY][eE][sS]|[yY])$ ]]
 then
     pushd frontend
     pwd
-    ./buildpack-nginx.sh
+    ./docker-build.sh
     popd
 fi
 kubectl apply -f ./frontend/k8s/local-deployment.yaml

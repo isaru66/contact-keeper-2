@@ -25,10 +25,10 @@ spec:
           - name: PORT
             value: "8091"
           - name: BACKEND_URL
-            value: "test"
+            value: "http://localhost/contact-keeper/be/"
         volumeMounts:
         - name: contact-keeper-fe-config
-          mountPath: "/workspace/config.json"
+          mountPath: "/usr/share/nginx/html/contact-keeper/config.json"
           subPath: "config.json"
           readOnly: true
       volumes:

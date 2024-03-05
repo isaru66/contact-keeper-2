@@ -37,8 +37,6 @@ spec:
   - match:
     - uri:
         prefix: /contact-keeper/
-    rewrite:
-      uri: /
     route:
     - destination:
         host: contact-keeper-fe
